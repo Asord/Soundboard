@@ -1,0 +1,35 @@
+{
+  "key_exchange_file": "G:\\key_exchange_macro",
+
+  "key_trigger": "F24",
+  "key_stop_id": "46",
+
+  "playback_devices": [
+    { "name": "CABLE Input (VB-Audio Virtual C", "volume": -8 }
+  ],
+  "output_devices": [
+    { "name": "Sony headphones (High Definitio", "volume": -8 },
+    { "name": "Main output (High Definition Au", "volume": -10},
+    { "name": "Main output (High Definition Au", "volume": -8 }
+  ],
+
+  "sound_directory": "C:\\Users\\killi\\Music\\",
+  "sounds": {
+    "57": "oui_daccord_daccord.mp3",
+    "48": "pas_amis.mp3",
+    "187": "je_te_bloque.mp3",
+    "79": "oui.mp3",
+    "80": "non.mp3",
+    "221": "lheure_du_duel.mp3",
+    "186": "cartman_maison.mp3",
+    "75": "bigflo_ban.mp3",
+    "76": "indignite.mp3",
+    "77": "ah.mp3",
+    "192": "oof_minecraft.mp3",
+    "220": "je_vous_demande.mp3",
+    "188": "pas_toi_qui_decide.mp3",
+    "190": "code_avec_cul.mp3",
+    "191": "honteux.mp3",
+    "223": "wololo.mp3"
+  }
+}
