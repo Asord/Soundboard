@@ -1,0 +1,11 @@
+{
+	"name": "Start",
+	"author": "Asord",
+	"version": "0.1a",
+
+	"config": {
+		"shortcuts": {
+			"67": "calc.exe"
+		}
+	}
+}

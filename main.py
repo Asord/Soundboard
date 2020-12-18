@@ -1,37 +1,84 @@
-from Sound import Sound, PreloadSounds
-from Devices import queryDevices
-from keyboard import wait
-from json import load
+from keyboard import wait as keyboard_interupt
+from json import load as load_json
+from os import listdir
+from os.path import isdir, join
+from importlib import import_module
+from atexit import register as register_atexit
 
-with open("config.json") as config_raw:
-    config = load(config_raw)
+with open("config.json", "r") as cfg: global_cfg = load_json(cfg)
 
-print("Retreiving playback & feedback config...")
-playback_device, playback_volume, feedback_device, feedback_volume = queryDevices(config)
-print("Playback on %s with volume %d" % (playback_device, playback_volume))
-print("Feedback on %s with volume %d" % (feedback_device, feedback_volume))
+def _exit(modules):
+    for module in modules:
+        module_config = module["infos"]["config"]
+        print("Safely finishing module %s" % module["infos"]["name"])
+        module["functions"].Finish(module_config)
+    print("All modules finished. Closing.")
 
-print("Preloading...")
-preload = PreloadSounds(config, playback_volume, feedback_volume)
-print("Preload ok.")
 
-Players = []
-while True:
-    wait(config["key_trigger"])
+def get_modules_dir():
+    modules = []
+    for elem in listdir("."):
+        if isdir(elem) and not (elem.startswith(".") or elem.startswith("_")):
+            modules.append(elem)
+    return modules
 
-    # garbage collection
-    for player in Players:
-        if player.finished:
-            Players.remove(player)
+def load_modules():
+    modules = []
 
-    with open(config["key_exchange_file"], "r") as kef:
-        key = kef.readline()
+    modules_dirs = get_modules_dir()
+    for module_dir in modules_dirs:
+        try:
+            with open(join(module_dir, "module.json")) as module_file:
+                module_infos = load_json(module_file)
+                modules_funcs = import_module(module_dir)
 
-        if key in preload:
-            Players.append(Sound(samplerate=44100, device=playback_device).play(preload[key][0]))
-            Players.append(Sound(samplerate=44100, device=feedback_device).play(preload[key][1]))
+                modules.append({"infos": module_infos, "functions" : modules_funcs, "keys":[]})
 
-        elif key == config["key_stop_id"]: # del
-            for player in Players:
-                player.stop()
+                print("Registred: %s v%s by %s" % (
+                    module_infos["name"],
+                    module_infos["version"],
+                    module_infos["author"]
+                ))
 
+        except ModuleNotFoundError as mnfe:
+            print("An issue has been encounted while trying to import a module.")
+            print("Did the __init__.py file exists in the module %s ?" % module_dir)
+            print(mnfe)
+
+        except FileNotFoundError as fnfe:
+            print("The config file of %s was not found while trying to initialize." % module_dir)
+            print(fnfe)
+
+    return modules
+
+if __name__ == '__main__':
+    modules = load_modules()
+
+    for module in modules:
+        config = module["infos"]["config"]
+
+        print("===========Initializing %s==========="% module["infos"]["name"])
+        success, captured_keys = module["functions"].Init(config)
+        if success:
+            module["keys"] = captured_keys
+            print("=============Initialized=============")
+        else:
+            print("===========Not initialized===========")
+
+    print("Register exit event")
+    register_atexit(lambda: _exit(modules))
+
+    print("Starting keyboard interupt... Waiting for F24...")
+    while True:
+        keyboard_interupt(global_cfg["key_trigger"])
+
+        with open(global_cfg["key_exchange_file"], "r") as kef: key = kef.readline()
+
+        if key == global_cfg["key_stop"]:
+            exit()
+
+        for module in modules:
+            if key in module["keys"]:
+                config = module["infos"]["config"]
+
+                module["functions"].Update(config, key)

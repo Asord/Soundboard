@@ -1,0 +1,15 @@
+{
+	"name": "ScreenSwitch",
+	"author": "Asord",
+	"version": "0.2a",
+
+	"config": {
+		"shortcuts": {
+			"97": "ctrl+alt+F1",
+			"98": "ctrl+alt+F2",
+			"99": "ctrl+alt+F3",
+			"100":"ctrl+alt+F4",
+			"101":"ctrl+alt+F5"
+		}
+	}
+}
