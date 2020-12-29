@@ -5,12 +5,11 @@
 
   "config": {
     "playback_devices": [
-      { "name": "CABLE Input (VB-Audio Virtual C", "volume": -8 }
+      { "name": "CABLE Input (VB-Audio Virtual C", "volume": -15 }
     ],
     "output_devices": [
       { "name": "Sony headphones (High Definitio", "volume": -8 },
-      { "name": "Main output (High Definition Au", "volume": -10},
-      { "name": "Main output (High Definition Au", "volume": -8 }
+      { "name": "Main output (High Definition Au", "volume": -10}
     ],
 
     "sound_directory": "C:\\Users\\killi\\Music\\",
