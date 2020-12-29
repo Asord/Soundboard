@@ -7,12 +7,17 @@ from atexit import register as register_atexit
 
 with open("config.json", "r") as cfg: global_cfg = load_json(cfg)
 
-def _exit(modules):
+def _clear_before_exit(modules):
     for module in modules:
         module_config = module["infos"]["config"]
         print("Safely finishing module %s" % module["infos"]["name"])
         module["functions"].Finish(module_config)
     print("All modules finished. Closing.")
+    print("============== Closed ==============")
+
+def _restart(modules):
+    _clear_before_exit(modules)
+    exit(1)
 
 
 def get_modules_dir():
@@ -66,7 +71,7 @@ if __name__ == '__main__':
             print("===========Not initialized===========")
 
     print("Register exit event")
-    register_atexit(lambda: _exit(modules))
+    register_atexit(lambda: _clear_before_exit(modules))
 
     print("Starting keyboard interupt... Waiting for F24...")
     while True:
@@ -75,7 +80,11 @@ if __name__ == '__main__':
         with open(global_cfg["key_exchange_file"], "r") as kef: key = kef.readline()
 
         if key == global_cfg["key_stop"]:
-            exit()
+            _clear_before_exit(modules)
+            exit(0)
+
+        elif key == global_cfg["key_restart"]:
+            _restart(modules)
 
         for module in modules:
             if key in module["keys"]:

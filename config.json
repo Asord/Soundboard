@@ -1,5 +1,6 @@
 {
   "key_exchange_file": "G:\\key_exchange_macro",
   "key_trigger": "F24",
-  "key_stop": "222"
+  "key_stop": "222",
+  "key_restart": "82"
 }
