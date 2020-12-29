@@ -9,7 +9,11 @@
 			"98": "ctrl+alt+F2",
 			"99": "ctrl+alt+F3",
 			"100":"ctrl+alt+F4",
-			"101":"ctrl+alt+F5"
+			"101":"ctrl+alt+F5",
+			"96": "F8+*"
+		},
+		"write": {
+			"84": "tN9%9kG%W#z#"
 		}
 	}
 }
